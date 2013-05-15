@@ -111,6 +111,7 @@ typedef struct MPGLContext {
     void (*fullscreen)(struct vo *vo);
     int (*vo_init)(struct vo *vo);
     void (*vo_uninit)(struct vo *vo);
+    int (*vo_control)(struct vo *vo, int *events, int request, void *arg);
     void (*releaseGlContext)(struct MPGLContext *);
     void (*set_current)(struct MPGLContext *, bool current);
 

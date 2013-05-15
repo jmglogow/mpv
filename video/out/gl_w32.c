@@ -215,4 +215,5 @@ void mpgl_set_backend_w32(MPGLContext *ctx)
     ctx->ontop = vo_w32_ontop;
     ctx->vo_init = vo_w32_init;
     ctx->vo_uninit = vo_w32_uninit;
+    ctx->vo_control = vo_w32_control;
 }

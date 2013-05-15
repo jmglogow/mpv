@@ -70,6 +70,6 @@ void mpgl_set_backend_cocoa(MPGLContext *ctx)
     ctx->resume = vo_cocoa_resume;
     ctx->register_resize_callback = vo_cocoa_register_resize_callback;
     ctx->vo_uninit = vo_cocoa_uninit;
-    ctx->set_current = set_current_cocoa;
+    ctx->vo_control = vo_cocoa_control;
     ctx->set_current = set_current_cocoa;
 }

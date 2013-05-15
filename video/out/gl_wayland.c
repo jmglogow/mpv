@@ -249,6 +249,7 @@ void mpgl_set_backend_wayland(MPGLContext *ctx)
     ctx->check_events = vo_wayland_check_events;
     ctx->fullscreen = vo_wayland_fullscreen;
     ctx->ontop = vo_wayland_ontop;
+    ctx->vo_control = vo_wayland_control;
     ctx->vo_init = vo_wayland_init;
     ctx->vo_uninit = vo_wayland_uninit;
 }
