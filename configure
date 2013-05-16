@@ -591,7 +591,7 @@ for ac_option do
   --disable-direct3d)   _direct3d=no    ;;
   --enable-sdl)         _sdl=yes       ;;
   --disable-sdl)        _sdl=no        ;;
-  --enable-sdl2)        _sdl2=yes       ;;
+  --enable-sdl2)        _sdl2=auto      ;;
   --disable-sdl2)       _sdl2=no        ;;
   --enable-dsound)      _dsound=yes     ;;
   --disable-dsound)     _dsound=no      ;;
