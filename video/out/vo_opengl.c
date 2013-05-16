@@ -221,17 +221,6 @@ static bool reparse_cmdline(struct gl_priv *p, char *args)
     return r >= 0;
 }
 
-// Always called under mpgl_lock
-static void handle_events(struct vo *vo, int events)
-{
-    struct gl_priv *p = vo->priv;
-
-    if (events & VO_EVENT_RESIZE)
-        resize(p);
-    if (events & VO_EVENT_EXPOSE)
-        vo->want_redraw = true;
-}
-
 static int control(struct vo *vo, uint32_t request, void *data)
 {
     struct gl_priv *p = vo->priv;
@@ -297,7 +286,10 @@ static int control(struct vo *vo, uint32_t request, void *data)
     mpgl_lock(p->glctx);
     int events = 0;
     int r = p->glctx->vo_control(vo, &events, request, data);
-    handle_events(vo, events);
+    if (events & VO_EVENT_RESIZE)
+        resize(p);
+    if (events & VO_EVENT_EXPOSE)
+        vo->want_redraw = true;
     mpgl_unlock(p->glctx);
 
     return r;

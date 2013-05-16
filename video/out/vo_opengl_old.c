@@ -2260,14 +2260,6 @@ err_out:
     return -1;
 }
 
-static void handle_events(struct vo *vo, int events)
-{
-    if (events & VO_EVENT_RESIZE)
-        resize(vo, vo->dwidth, vo->dheight);
-    if (events & VO_EVENT_EXPOSE)
-        vo->want_redraw = true;
-}
-
 static int control(struct vo *vo, uint32_t request, void *data)
 {
     struct gl_priv *p = vo->priv;
@@ -2322,7 +2314,10 @@ static int control(struct vo *vo, uint32_t request, void *data)
 
     int events = 0;
     int r = p->glctx->vo_control(vo, &events, request, data);
-    handle_events(vo, events);
+    if (events & VO_EVENT_RESIZE)
+        resize(vo, vo->dwidth, vo->dheight);
+    if (events & VO_EVENT_EXPOSE)
+        vo->want_redraw = true;
 
     return r;
 }
