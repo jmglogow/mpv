@@ -678,6 +678,9 @@ void vo_w32_ontop(struct vo *vo)
 int vo_w32_control(struct vo *vo, int *events, int request, void *arg)
 {
     switch (request) {
+    case VOCTRL_CHECK_EVENTS:
+        *events |= vo_w32_check_events(vo);
+        return VO_TRUE;
     case VOCTRL_FULLSCREEN:
         vo_w32_fullscreen(vo);
         *events |= VO_EVENT_RESIZE;

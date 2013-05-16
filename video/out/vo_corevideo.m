@@ -138,14 +138,6 @@ static int config(struct vo *vo, uint32_t width, uint32_t height,
     return 0;
 }
 
-static void check_events(struct vo *vo)
-{
-    struct priv *p = vo->priv;
-    int e = p->mpglctx->check_events(vo);
-    if (e & VO_EVENT_RESIZE)
-        resize(vo);
-}
-
 static void prepare_texture(struct vo *vo)
 {
     struct priv *p = vo->priv;
@@ -406,7 +398,6 @@ const struct vo_driver video_out_corevideo = {
     .draw_image = draw_image,
     .draw_osd = draw_osd,
     .flip_page = flip_page,
-    .check_events = check_events,
     .uninit = uninit,
     .priv_size = sizeof(struct priv),
 };

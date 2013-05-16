@@ -865,6 +865,9 @@ void vo_wayland_update_window_title(struct vo *vo)
 int vo_wayland_control(struct vo *vo, int *events, int request, void *arg)
 {
     switch (request) {
+    case VOCTRL_CHECK_EVENTS:
+        *events |= vo_wayland_check_events(vo);
+        return VO_TRUE;
     case VOCTRL_FULLSCREEN:
         vo_wayland_fullscreen(vo);
         *events |= VO_EVENT_RESIZE;

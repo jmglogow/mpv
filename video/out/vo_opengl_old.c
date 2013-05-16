@@ -1750,21 +1750,6 @@ static int config(struct vo *vo, uint32_t width, uint32_t height,
     return 0;
 }
 
-static void handle_events(struct vo *vo, int events)
-{
-    if (events & VO_EVENT_RESIZE)
-        resize(vo, vo->dwidth, vo->dheight);
-    if (events & VO_EVENT_EXPOSE)
-        vo->want_redraw = true;
-}
-
-static void check_events(struct vo *vo)
-{
-    struct gl_priv *p = vo->priv;
-
-    handle_events(vo, p->glctx->check_events(vo));
-}
-
 static void do_render(struct vo *vo)
 {
     struct gl_priv *p = vo->priv;
@@ -2275,6 +2260,14 @@ err_out:
     return -1;
 }
 
+static void handle_events(struct vo *vo, int events)
+{
+    if (events & VO_EVENT_RESIZE)
+        resize(vo, vo->dwidth, vo->dheight);
+    if (events & VO_EVENT_EXPOSE)
+        vo->want_redraw = true;
+}
+
 static int control(struct vo *vo, uint32_t request, void *data)
 {
     struct gl_priv *p = vo->priv;
@@ -2348,6 +2341,5 @@ const struct vo_driver video_out_opengl_old = {
     .draw_image = draw_image,
     .draw_osd = draw_osd,
     .flip_page = flip_page,
-    .check_events = check_events,
     .uninit = uninit,
 };

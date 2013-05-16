@@ -192,26 +192,6 @@ static int config(struct vo *vo, uint32_t width, uint32_t height,
     return 0;
 }
 
-// Always called under mpgl_lock
-static void handle_events(struct vo *vo, int events)
-{
-    struct gl_priv *p = vo->priv;
-
-    if (events & VO_EVENT_RESIZE)
-        resize(p);
-    if (events & VO_EVENT_EXPOSE)
-        vo->want_redraw = true;
-}
-
-static void check_events(struct vo *vo)
-{
-    struct gl_priv *p = vo->priv;
-
-    mpgl_lock(p->glctx);
-    handle_events(vo, p->glctx->check_events(vo));
-    mpgl_unlock(p->glctx);
-}
-
 static bool reparse_cmdline(struct gl_priv *p, char *args)
 {
     struct m_config *cfg = NULL;
@@ -239,6 +219,17 @@ static bool reparse_cmdline(struct gl_priv *p, char *args)
 
     talloc_free(cfg);
     return r >= 0;
+}
+
+// Always called under mpgl_lock
+static void handle_events(struct vo *vo, int events)
+{
+    struct gl_priv *p = vo->priv;
+
+    if (events & VO_EVENT_RESIZE)
+        resize(p);
+    if (events & VO_EVENT_EXPOSE)
+        vo->want_redraw = true;
 }
 
 static int control(struct vo *vo, uint32_t request, void *data)
@@ -400,7 +391,6 @@ const struct vo_driver video_out_opengl = {
     .draw_image = draw_image,
     .draw_osd = draw_osd,
     .flip_page = flip_page,
-    .check_events = check_events,
     .uninit = uninit,
     .priv_size = sizeof(struct gl_priv),
     .options = options,
@@ -421,7 +411,6 @@ const struct vo_driver video_out_opengl_hq = {
     .draw_image = draw_image,
     .draw_osd = draw_osd,
     .flip_page = flip_page,
-    .check_events = check_events,
     .uninit = uninit,
     .priv_size = sizeof(struct gl_priv),
     .options = options,
