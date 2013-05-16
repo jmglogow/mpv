@@ -108,7 +108,6 @@ typedef struct MPGLContext {
 
     void (*swapGlBuffers)(struct MPGLContext *);
     int (*check_events)(struct vo *vo);
-    void (*fullscreen)(struct vo *vo);
     int (*vo_init)(struct vo *vo);
     void (*vo_uninit)(struct vo *vo);
     int (*vo_control)(struct vo *vo, int *events, int request, void *arg);
@@ -124,13 +123,6 @@ typedef struct MPGLContext {
     // version is not available, and newer versions are incompatible.)
     bool (*config_window)(struct MPGLContext *ctx, uint32_t d_width,
                           uint32_t d_height, uint32_t flags);
-
-    // optional
-    void (*pause)(struct vo *vo);
-    void (*resume)(struct vo *vo);
-    void (*ontop)(struct vo *vo);
-    void (*border)(struct vo *vo);
-    void (*update_xinerama_info)(struct vo *vo);
 
     // An optional function to register a resize callback in the backend that
     // can be called on separate thread to handle resize events immediately
