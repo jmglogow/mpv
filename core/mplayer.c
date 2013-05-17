@@ -3476,7 +3476,7 @@ static void run_playloop(struct MPContext *mpctx)
             mp_input_get_last_mouse_event_time(mpctx->input);
         if (mpctx->mouse_last_time != mouse_last_time) {
             mpctx->mouse_last_time = mouse_last_time;
-            if (opts->vo.cursor_autohide_delay > -2) {
+            if (opts->vo.cursor_autohide_delay > -1) {
                 vo_control(vo, VOCTRL_SET_CURSOR_VISIBILITY, &(bool){true});
                 if (opts->vo.cursor_autohide_delay >= 0) {
                     mpctx->mouse_waiting_hide = 1;
@@ -3486,9 +3486,11 @@ static void run_playloop(struct MPContext *mpctx)
             }
         }
 
-        if (mpctx->mouse_waiting_hide && GetTimerMS() >= mpctx->mouse_timer) {
+        if (mpctx->mouse_waiting_hide == 1 &&
+            GetTimerMS() >= mpctx->mouse_timer)
+        {
             vo_control(vo, VOCTRL_SET_CURSOR_VISIBILITY, &(bool){false});
-            mpctx->mouse_waiting_hide = false;
+            mpctx->mouse_waiting_hide = 2;
         }
 
         if (opts->heartbeat_cmd) {
