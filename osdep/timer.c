@@ -19,15 +19,27 @@
 
 #include "timer.h"
 
+static uint64_t raw_time_offset;
+static uint64_t raw_time_previous;
+
 void mp_time_init(void)
 {
     mp_raw_time_init();
-    srand(GetTimerMS());
+    srand(mp_raw_time_us());
+    raw_time_offset = mp_raw_time_us();
+    // Arbitrary additional offset to avoid confusing relative/absolute times.
+    raw_time_offset -= 10000000;
 }
 
 int64_t mp_time_us(void)
 {
-    return mp_raw_time_us();
+    uint64_t t = mp_raw_time_us() - raw_time_offset;
+    // Due to the offset, the timer absolutely can't wrap. So time must be
+    // going backwards (wall clock adjustment?), and we clamp it.
+    if (t < raw_time_previous)
+        t = raw_time_previous;
+    raw_time_previous = t;
+    return raw_time_previous;
 }
 
 unsigned int GetTimer(void)
