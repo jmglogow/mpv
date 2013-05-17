@@ -577,10 +577,6 @@ static MP_NORETURN void exit_player(struct MPContext *mpctx,
 
     mpctx->encode_lavc_ctx = NULL;
 
-#if defined(__MINGW32__) || defined(__CYGWIN__)
-    timeEndPeriod(1);
-#endif
-
     mp_input_uninit(mpctx->input);
 
     osd_free(mpctx->osd);
@@ -4687,15 +4683,13 @@ static void osdep_preinit(int *p_argc, char ***p_argv)
     atexit(detach_ptw32);
 #endif
 
-    InitTimer();
-    srand(GetTimerMS());
-
 #if defined(__MINGW32__) || defined(__CYGWIN__)
     // stop Windows from showing all kinds of annoying error dialogs
     SetErrorMode(0x8003);
-    // request 1ms timer resolution
-    timeBeginPeriod(1);
 #endif
+
+    InitTimer();
+    srand(GetTimerMS());
 
 #ifdef HAVE_TERMCAP
     load_termcap(NULL); // load key-codes

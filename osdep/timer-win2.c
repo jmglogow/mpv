@@ -45,4 +45,6 @@ int usec_sleep(int usec_delay){
 
 void InitTimer(void)
 {
+    // request 1ms timer resolution
+    timeBeginPeriod(1);
 }
