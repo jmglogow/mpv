@@ -152,7 +152,6 @@ static NSString *escape_loadfile_name(NSString *input)
                                               handler:^(NSEvent *event) {
             return [self.eventsResponder handleKeyDown:event];
         }];
-
     }
 
     return self;

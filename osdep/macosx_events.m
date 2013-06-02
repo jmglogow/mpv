@@ -106,6 +106,23 @@ void cocoa_put_key(int keycode)
 }
 
 @implementation EventsResponder
+- (id) init
+{
+    if (self = [super init]) {
+        self.remote = [[[HIDRemote alloc] init] autorelease];
+        if (self.remote) {
+            [self.remote setDelegate:self];
+            [self.remote startRemoteControl:kHIDRemoteModeExclusiveAuto];
+        }
+    }
+
+    return self;
+}
+- (void)dealloc
+{
+    [self.remote stopRemoteControl];
+    [super dealloc];
+}
 - (NSArray *) keyEquivalents
 {
     return @[@"h", @"q", @"Q", @"0", @"1", @"2"];
@@ -157,5 +174,33 @@ void cocoa_put_key(int keycode)
     }
 
     return nil;
+}
+- (void)hidRemote:(HIDRemote *)remote
+    eventWithButton:(HIDRemoteButtonCode)buttonCode
+          isPressed:(BOOL)isPressed
+ fromHardwareWithAttributes:(NSMutableDictionary *)attributes
+{
+    if (!isPressed) return;
+
+    NSDictionary *keymap = @{
+        @(kHIDRemoteButtonCodePlay):       @(MP_AR_PLAY),
+        @(kHIDRemoteButtonCodePlayHold):   @(MP_AR_PLAY_HOLD),
+        @(kHIDRemoteButtonCodeCenter):     @(MP_AR_CENTER),
+        @(kHIDRemoteButtonCodeCenterHold): @(MP_AR_CENTER_HOLD),
+        @(kHIDRemoteButtonCodeLeft):       @(MP_AR_PREV),
+        @(kHIDRemoteButtonCodeLeftHold):   @(MP_AR_PREV_HOLD),
+        @(kHIDRemoteButtonCodeRight):      @(MP_AR_NEXT),
+        @(kHIDRemoteButtonCodeRightHold):  @(MP_AR_NEXT_HOLD),
+        @(kHIDRemoteButtonCodeMenu):       @(MP_AR_MENU),
+        @(kHIDRemoteButtonCodeMenuHold):   @(MP_AR_MENU_HOLD),
+        @(kHIDRemoteButtonCodeUp):         @(MP_AR_VUP),
+        @(kHIDRemoteButtonCodeUpHold):     @(MP_AR_VUP_HOLD),
+        @(kHIDRemoteButtonCodeDown):       @(MP_AR_VDOWN),
+        @(kHIDRemoteButtonCodeDownHold):   @(MP_AR_VDOWN_HOLD),
+    };
+
+    int key = [keymap[@(buttonCode)] intValue];
+    if (key > 0)
+        cocoa_put_key(key);
 }
 @end
